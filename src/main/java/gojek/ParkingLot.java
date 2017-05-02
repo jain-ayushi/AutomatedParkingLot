@@ -44,7 +44,7 @@ public class ParkingLot {
 	public void park(String regNo, String color) {
 		if (!parkedCars.contains(regNo)) {
 			if(this.availableSlots.peek()!=null) {
-				int emptySlot = this.availableSlots.poll();
+				int emptySlot = this.availableSlots.poll() + 1;
 				Car newCar = new Car(regNo, color);
 				this.parkedCars.add(regNo);
 				this.map1.put(emptySlot, newCar);
@@ -59,6 +59,7 @@ public class ParkingLot {
 					regNosList.add(regNo);
 					this.map2.put(color, regNosList);
 				}
+				System.out.println("Allocated slot number: " + emptySlot);
 			} else {
 				System.out.println("Sorry, parking lot is full");
 			}
@@ -84,14 +85,14 @@ public class ParkingLot {
 				this.map2.put(color, regNoList);
 			}
 			this.parkedCars.remove(regNo);
-			this.availableSlots.add(slotNo);
+			this.availableSlots.add(slotNo-1);
 			System.out.println("Slot number " + slotNo + " is free");
 		} else {
 			System.out.println("Parking slot is already empty");
 		}
 	}
 	
-	public void status() {
+	public void getParkingStatus() {
 		if (!this.isParkingLotCreated) {
 			System.out.println("Sorry, parking lot is not created");
 		} else {
@@ -121,7 +122,7 @@ public class ParkingLot {
 				for (int i=0;i<regNoList.size();i++){
 					sb.append(regNoList.get(i)).append(", ");
 				}
-				sb.deleteCharAt(sb.length()-1);
+				sb.delete(sb.length()-2, sb.length());
 				System.out.println(sb.toString());
 		} else {
 			System.out.println("No cars found for this color");
@@ -149,7 +150,7 @@ public class ParkingLot {
 				for(int i=0;i<regNoList.size();i++){
 					sb.append(this.map3.get(regNoList.get(i))).append(", ");
 				}
-				sb.deleteCharAt(sb.length()-1);
+				sb.delete(sb.length()-2, sb.length());
 				System.out.println(sb.toString());
 		} else {
 			System.out.println("Not found");
