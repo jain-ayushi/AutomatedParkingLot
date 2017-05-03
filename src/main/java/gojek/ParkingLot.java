@@ -9,15 +9,15 @@ import java.util.PriorityQueue;
 
 public class ParkingLot {
 
-	private PriorityQueue<Integer> availableSlots = null;
+	PriorityQueue<Integer> availableSlots = null;
 	private boolean isParkingLotCreated = false;
-	private List<String> parkedCars;
+	List<String> parkedCars;
 	//Map for slot and Car object
-	private Map<Integer, Car> map1;
+	Map<Integer, Car> map1;
 	//Map for color and corresponding list of regNos
-	private Map<String, ArrayList<String>> map2;
+	Map<String, ArrayList<String>> map2;
 	//Map for regNo and corresponding slot
-	private Map<String, Integer> map3;
+	Map<String, Integer> map3;
 	
 	public void createParkingLot(int slots) {
 		if(slots >0 && !this.isParkingLotCreated){
@@ -42,54 +42,62 @@ public class ParkingLot {
 	}
 	
 	public void park(String regNo, String color) {
-		if (!parkedCars.contains(regNo)) {
-			if(this.availableSlots.peek()!=null) {
-				int emptySlot = this.availableSlots.poll() + 1;
-				Car newCar = new Car(regNo, color);
-				this.parkedCars.add(regNo);
-				this.map1.put(emptySlot, newCar);
-				this.map3.put(regNo, emptySlot);
-				if(this.map2.containsKey(color)) {
-					ArrayList<String> oldRegNosList = this.map2.get(color);
-					this.map2.remove(color);
-					oldRegNosList.add(regNo);
-					this.map2.put(color, oldRegNosList);
-				} else {
-					ArrayList<String> regNosList = new ArrayList<String>();
-					regNosList.add(regNo);
-					this.map2.put(color, regNosList);
-				}
-				System.out.println("Allocated slot number: " + emptySlot);
-			} else {
-				System.out.println("Sorry, parking lot is full");
-			}
+		if (!this.isParkingLotCreated) {
+			System.out.println("Sorry, parking lot is not created");
 		} else {
-			System.out.println("Car with registration number :"+regNo+" is already parked");
-		}
+			if (!parkedCars.contains(regNo)) {
+				if(this.availableSlots.peek()!=null) {
+					int emptySlot = this.availableSlots.poll() + 1;
+					Car newCar = new Car(regNo, color);
+					this.parkedCars.add(regNo);
+					this.map1.put(emptySlot, newCar);
+					this.map3.put(regNo, emptySlot);
+					if(this.map2.containsKey(color)) {
+						ArrayList<String> oldRegNosList = this.map2.get(color);
+						this.map2.remove(color);
+						oldRegNosList.add(regNo);
+						this.map2.put(color, oldRegNosList);
+					} else {
+						ArrayList<String> regNosList = new ArrayList<String>();
+						regNosList.add(regNo);
+						this.map2.put(color, regNosList);
+					}
+					System.out.println("Allocated slot number: " + emptySlot);
+				} else {
+					System.out.println("Sorry, parking lot is full");
+				}
+			} else {
+				System.out.println("Car with registration number :"+regNo+" is already parked");
+			}
+		}	
 	}
 	
 	public void leave(int slotNo){
-		if(this.map1.containsKey(slotNo)){
-			Car car = this.map1.get(slotNo);
-			this.map1.remove(slotNo);
-			String regNo = car.getRegNo();
-			this.map3.remove(regNo);
-			
-			String color = car.getColor();
-			ArrayList<String> regNoList = this.map2.get(color);
-			if (regNoList.contains(regNo)){
-				regNoList.remove(regNo);
-			}
-			this.map2.remove(color);
-			if (!regNoList.isEmpty()){
-				this.map2.put(color, regNoList);
-			}
-			this.parkedCars.remove(regNo);
-			this.availableSlots.add(slotNo-1);
-			System.out.println("Slot number " + slotNo + " is free");
+		if (!this.isParkingLotCreated){
+			System.out.println("Sorry, parking lot is not created");
 		} else {
-			System.out.println("Parking slot is already empty");
-		}
+			if(this.map1.containsKey(slotNo)){
+				Car car = this.map1.get(slotNo);
+				this.map1.remove(slotNo);
+				String regNo = car.getRegNo();
+				this.map3.remove(regNo);
+				
+				String color = car.getColor();
+				ArrayList<String> regNoList = this.map2.get(color);
+				if (regNoList.contains(regNo)){
+					regNoList.remove(regNo);
+				}
+				this.map2.remove(color);
+				if (!regNoList.isEmpty()){
+					this.map2.put(color, regNoList);
+				}
+				this.parkedCars.remove(regNo);
+				this.availableSlots.add(slotNo-1);
+				System.out.println("Slot number " + slotNo + " is free");
+			} else {
+				System.out.println("Parking slot is already empty");
+			}
+		}	
 	}
 	
 	public void getParkingStatus() {

@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class AutomatedParking {
+public class Main {
 	
 	public static void main(String[] args) {
 		InputParser inputParser = new InputParser();
@@ -28,7 +28,7 @@ public class AutomatedParking {
 			break;
 
 		case 1:
-			inputParser.parseFileInput(args[1]);
+			inputParser.parseFileInput(args[0]);
 			break;
 		
 		default:
